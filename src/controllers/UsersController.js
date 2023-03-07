@@ -17,6 +17,15 @@ class UsersController {
       res.status(500).json(message);
     }
   }
+
+  async listPosts(req, res) {
+    try {
+      const postList = await repository.getPostList()
+      res.status(200).send(postList.rows)
+    } catch (message) {
+      res.status(500).json(message)
+    }
+  }
 }
 
 export default new UsersController();
