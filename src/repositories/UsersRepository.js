@@ -22,6 +22,14 @@ class UsersRepository {
     );
     return res;
   }
+  async getPostList() {
+    const res = await db.query(
+      `SELECT * FROM posts ORDER BY created_at DESC LIMIT 20;`
+    );
+    return res;
+  }
 }
+
+
 
 export default new UsersRepository();
