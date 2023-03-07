@@ -15,6 +15,10 @@ class SessionsRepository {
     );
     return res;
   }
+  async deleteById(id) {
+    const res = await db.query("DELETE FROM sessions WHERE id = $1", [id]);
+    return res;
+  }
 }
 
 export default new SessionsRepository();
