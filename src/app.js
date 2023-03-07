@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import SignUp from "./routes/SignUp.js";
 import SignIn from "./routes/SignIn.js";
+import Hashtag from "./routes/Hashtag.js";
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(cors());
 
 app.use(SignUp);
 app.use(SignIn);
+app.use(Hashtag);
 
 // -----------------------------
 
