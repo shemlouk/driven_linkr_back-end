@@ -8,6 +8,13 @@ class SessionsRepository {
     );
     return res;
   }
+  async getById(id) {
+    const res = await db.query(
+      `SELECT id, user_id AS "userId" FROM sessions WHERE id = $1`,
+      [id]
+    );
+    return res;
+  }
 }
 
 export default new SessionsRepository();
