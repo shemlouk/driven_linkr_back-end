@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import SignUp from "./routes/SignUp.js";
 
 dotenv.config();
 
@@ -11,7 +12,7 @@ app.use(cors());
 
 // routes ----------------------
 
-
+app.use(SignUp);
 
 // -----------------------------
 
