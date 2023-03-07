@@ -8,6 +8,20 @@ class UsersRepository {
     );
     return res;
   }
+  async getByEmail(email) {
+    const res = await db.query(
+      `SELECT id, 
+              username,
+              email, 
+              password AS "hashedPassword",
+              profile_picture AS "profilePicture",
+              created_at AS "createdAt"
+        FROM users 
+        WHERE email = $1`,
+      [email]
+    );
+    return res;
+  }
 }
 
 export default new UsersRepository();
