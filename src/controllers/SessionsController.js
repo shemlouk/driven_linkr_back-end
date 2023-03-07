@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const EXPIRATION = { expiresIn: 60 * 60 * 24 }; // 1 day
-const KEY = process.env.JWT_SECRET;
+const KEY = process.env.SECRET_KEY;
 
 class SessionsController {
   async create(req, res) {
