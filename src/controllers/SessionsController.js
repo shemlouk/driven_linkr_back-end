@@ -29,6 +29,16 @@ class SessionsController {
       res.status(500).json(message);
     }
   }
+  async delete(req, res) {
+    const { id } = res.locals.session;
+    try {
+      await SessionsRepository.deleteById(id);
+      res.sendStatus(204);
+    } catch ({ message }) {
+      console.error(message);
+      res.status(500).json(message);
+    }
+  }
 }
 
 export default new SessionsController();
