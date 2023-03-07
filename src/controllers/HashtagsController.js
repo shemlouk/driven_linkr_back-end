@@ -1,12 +1,13 @@
 import HashtagsRepository from "../repositories/HashtagsRepository.js"
 
 class HashtagsController {
-    async getTrending(_, res) {
+    async getTrending(req, res) {
         try {
             const hashtags = (await HashtagsRepository.getTrending()).rows;
             res.send(hashtags);
-        } catch ({code, message}) {
-            console.log(`getTrending Error ${code}: ${message}`);
+        } catch (error) {
+            console.error(`getTrending ${error}`);
+            res.sendStatus(500);
         }
     }
 }
