@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const KEY = process.env.JWT_SECRET;
+const KEY = process.env.SECRET_KEY;
 
 const authentication = async (req, res, next) => {
   const token = req.header("authorization")?.replace(/(Bearer )/g, "");
