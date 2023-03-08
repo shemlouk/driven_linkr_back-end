@@ -10,6 +10,16 @@ class HashtagsController {
             res.sendStatus(500);
         }
     }
+    async getPostsWithHashtagId(req, res) {
+        try {
+            const hashtagId = Number(req.params.id) || 0;
+            const posts = (await HashtagsRepository.getPostsWithHashtagId(hashtagId)).rows;
+            res.send(posts);
+        } catch (error) {
+            console.error(`getPostsWithHashtagId ${error}`);
+            res.sendStatus(500);
+        }
+    }
 }
 
 export default new HashtagsController();
