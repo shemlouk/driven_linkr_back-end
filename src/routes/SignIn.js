@@ -7,5 +7,6 @@ const router = Router();
 
 router.post("/signin", validateBody, controller.create);
 router.delete("/signin", authentication, controller.delete);
+router.get("/signin/validate", authentication, controller.validate);
 
 export default router;
