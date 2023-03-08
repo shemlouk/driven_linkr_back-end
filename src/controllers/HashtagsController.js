@@ -1,6 +1,24 @@
 import HashtagsRepository from "../repositories/HashtagsRepository.js"
 
 class HashtagsController {
+    async setHashtagName(req, res) {
+        try {
+            const name = req.body.name;
+
+            const data = (await HashtagsRepository.getHashtagByName(name)).rows[0];
+            
+            if (data.length === 0) {
+                const hashtagId = (await HashtagsRepository.create(name)).rows[0];
+                return res.status(201).send(hashtagId);
+            }
+
+            const updated = (await HashtagsRepository.updateQuantityByOne(data.quantity, data.id)).rows[0];
+            res.status(200).send(updated);
+        } catch (error) {
+            console.error(`create ${error}`);
+            res.sendStatus(500);
+        }
+    }
     async getTrending(req, res) {
         try {
             const hashtags = (await HashtagsRepository.getTrending()).rows;
