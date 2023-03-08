@@ -24,6 +24,15 @@ class Schemas {
       name: Joi.string().min(1).required()
     });
   }
+  createPost() {
+    return Joi.object({
+      description: Joi.string(),
+      url: Joi.string().uri().required(),
+      preview_title: Joi.string().required(),
+      preview_description: Joi.string().required(),
+      preview_img: Joi.string().uri().required()
+    })
+  }
 }
 
 export default new Schemas();
