@@ -19,6 +19,11 @@ class Schemas {
       .options({ presence: "required" })
       .required();
   }
+  hashtag() {
+    return Joi.object({
+      name: Joi.string().min(1).required()
+    });
+  }
 }
 
 export default new Schemas();
