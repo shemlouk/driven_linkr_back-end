@@ -39,6 +39,9 @@ class SessionsController {
       res.status(500).json(message);
     }
   }
+  async validate(req, res) {
+    res.sendStatus(200);
+  }
 }
 
 export default new SessionsController();
