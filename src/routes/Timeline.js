@@ -7,5 +7,6 @@ const router = Router()
 
 router.get("/timeline", authentication, UsersController.listPosts)
 router.post("/timeline", authentication, validateBody, UsersController.publishPost)
+router.post("/timeline/:postId/like", authentication, UsersController.likePost)
 
 export default router
