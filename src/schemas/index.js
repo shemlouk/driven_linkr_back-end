@@ -3,7 +3,7 @@ import Joi from "joi";
 class Schemas {
   signup() {
     return Joi.object({
-      username: Joi.string().min(2).max(50),
+      name: Joi.string().min(2).max(50),
       email: Joi.string().email(),
       password: Joi.string().min(8).max(16),
       profilePicture: Joi.string().uri(),
@@ -21,7 +21,7 @@ class Schemas {
   }
   hashtag() {
     return Joi.object({
-      name: Joi.string().min(1).required()
+      name: Joi.string().min(1).required(),
     });
   }
   createPost() {
@@ -30,8 +30,8 @@ class Schemas {
       url: Joi.string().uri().required(),
       preview_title: Joi.string().required(),
       preview_description: Joi.string().required(),
-      preview_img: Joi.string().uri().required()
-    })
+      preview_img: Joi.string().uri().required(),
+    });
   }
 }
 
