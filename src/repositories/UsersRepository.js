@@ -24,9 +24,13 @@ class UsersRepository {
   }
   async getPostList() {
     const res = await db.query(
-      `SELECT * FROM posts ORDER BY created_at DESC LIMIT 20;`
+      `
+        SELECT posts.*, users.username  AS name, users.profile_picture AS profilePicture FROM posts
+        JOIN users ON users.id = posts.user_id 
+        ORDER BY created_at DESC LIMIT 20;
+      `
     );
-    return res;
+    return res
   }
   async insertPost(
     description,
