@@ -23,7 +23,7 @@ class HashtagsRepository {
     }
     async getPostsWithHashtagId(hashtagId) {
         const res = db.query(
-            `SELECT p.*, h.name FROM posts p JOIN posts_hashtags ph ON p.id = ph.post_id JOIN hashtags h ON h.id = ph.hashtag_id WHERE ph.hashtag_id = $1 ORDER BY created_at DESC;`,
+            `SELECT u.name, u.profile_picture, p.* FROM posts p JOIN posts_hashtags ph ON p.id = ph.post_id JOIN hashtags h ON h.id = ph.hashtag_id JOIN users u ON p.user_id = u.id WHERE ph.hashtag_id = $1 ORDER BY created_at DESC;`,
             [hashtagId]);
         return res;
     }

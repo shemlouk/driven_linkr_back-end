@@ -19,6 +19,17 @@ class HashtagsController {
             res.sendStatus(500);
         }
     }
+    async getHashtagByName(req, res) {
+        try {
+            const {name} = req.params;
+            
+            const data = (await HashtagsRepository.getHashtagByName(name)).rows[0];
+            res.send(data);
+        } catch (error) {
+            console.error(`getHashtagByName ${error}`);
+            res.sendStatus(500);
+        }
+    }
     async getTrending(req, res) {
         try {
             const hashtags = (await HashtagsRepository.getTrending()).rows;

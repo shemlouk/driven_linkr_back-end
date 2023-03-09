@@ -7,6 +7,7 @@ const router = Router();
 
 router.get("/trending", authentication, HashtagsController.getTrending);
 router.get("/hashtag/:id", authentication, HashtagsController.getPostsWithHashtagId);
+router.get("/hashtag/search/:name", authentication, HashtagsController.getHashtagByName);
 router.post("/hashtag", authentication, validateBody, HashtagsController.setHashtagName);
 
 export default router;
