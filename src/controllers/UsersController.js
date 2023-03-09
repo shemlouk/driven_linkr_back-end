@@ -30,7 +30,7 @@ class UsersController {
 
   async publishPost(req, res) {
     const { description, url } = req.body;
-    const userId = res.locals.session;
+    const { userId } = res.locals.session;
 
     try {
       if (!url) {

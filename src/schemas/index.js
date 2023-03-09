@@ -24,6 +24,12 @@ class Schemas {
       name: Joi.string().min(1).required(),
     });
   }
+  timeline() {
+    return Joi.object({
+      description: Joi.string(),
+      url: Joi.string().uri().required(),
+    });
+  }
   createPost() {
     return Joi.object({
       description: Joi.string(),
