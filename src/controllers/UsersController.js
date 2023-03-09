@@ -76,6 +76,16 @@ class UsersController {
       res.status(500).json(message);
     }
   }
+
+  async filterByName(req, res) {
+    const { name } = req.query;
+    try {
+      const { rows } = await repository.getByName(name);
+      res.send(rows);
+    } catch ({ message }) {
+      res.status(500).json(message);
+    }
+  }
 }
 
 export default new UsersController();

@@ -1,10 +1,11 @@
 import UsersController from "../controllers/UsersController.js";
-import { Router } from "express";
-import validateBody from "../middlewares/validateBody.js";
 import authentication from "../middlewares/authentication.js";
+import validateBody from "../middlewares/validateBody.js";
+import { Router } from "express";
 
-const router = Router()
+const router = Router();
 
-router.get("/user/:id?", authentication, UsersController.listUserPosts)
+router.get("/user/search", UsersController.filterByName);
+router.get("/user/:id?", authentication, UsersController.listUserPosts);
 
-export default router
+export default router;
