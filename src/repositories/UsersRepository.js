@@ -42,6 +42,25 @@ class UsersRepository {
     );
     return res;
   }
+  async likePost(postId, userId) {
+    try {
+      const res = await db.query(
+        `INSERT INTO posts_likes (post_id, user_id) VALUES ($1, $2);`,
+        [postId, userId]
+      );
+      return res;
+    } catch (error) {
+      if (error.code === "23505") {
+        const res = await db.query(
+          `DELETE FROM posts_likes WHERE post_id = $1 AND user_id = $2;`,
+          [postId, userId]
+        );
+        return res;
+      } else {
+        throw error;
+      }
+    }
+  }
 }
 
 export default new UsersRepository();

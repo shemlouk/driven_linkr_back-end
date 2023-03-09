@@ -53,6 +53,19 @@ class UsersController {
       res.status(500).json(message);
     }
   }
+
+  async likePost(req, res) {
+    const { postId } = req.params;
+    const { userId } = res.locals.session;
+    try {
+      const result = await repository.likePost(postId, userId);
+      if (!result) return res.sendStatus(404);
+      if (result.command === "INSERT") return res.sendStatus(201);
+      if (result.command === "DELETE") return res.sendStatus(200);
+    } catch (message) {
+      res.status(500).json(message);
+    }
+  }
 }
 
 export default new UsersController();
