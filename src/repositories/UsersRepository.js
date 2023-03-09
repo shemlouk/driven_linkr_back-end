@@ -65,6 +65,18 @@ class UsersRepository {
       }
     }
   }
+  async getPostById(userId) {
+    const res = await db.query(
+      `
+        SELECT posts.*, users.username AS name, users.profile_picture AS profilePicture FROM posts
+        JOIN users ON users.id = posts.user_id 
+        WHERE posts.user_id = $1
+        ORDER BY created_at DESC LIMIT 20;
+      `,
+      [userId]
+    );
+    return res;
+  }
 }
 
 export default new UsersRepository();
