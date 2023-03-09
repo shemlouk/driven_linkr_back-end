@@ -68,11 +68,21 @@ class UsersController {
   }
 
   async listUserPosts(req, res) {
-    const { userId } = req.params
+    const { userId } = req.params;
     try {
       const postList = await repository.getPostById(userId);
       res.status(200).send(postList.rows);
     } catch (message) {
+      res.status(500).json(message);
+    }
+  }
+
+  async filterByName(req, res) {
+    const { name } = req.query;
+    try {
+      const { rows } = await repository.getByName(name);
+      res.send(rows);
+    } catch ({ message }) {
       res.status(500).json(message);
     }
   }
