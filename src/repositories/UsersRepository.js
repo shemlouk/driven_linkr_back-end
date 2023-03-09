@@ -61,6 +61,18 @@ class UsersRepository {
       }
     }
   }
+  async getByName(string) {
+    const searchString = string + "%";
+    const res = await db.query(
+      `SELECT id,
+              name,
+              profile_picture AS "profilePicture"
+        FROM users
+        WHERE LOWER(name) LIKE LOWER($1)`,
+      [searchString]
+    );
+    return res;
+  }
 }
 
 export default new UsersRepository();
