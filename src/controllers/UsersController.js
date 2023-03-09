@@ -21,32 +21,51 @@ class UsersController {
 
   async listPosts(req, res) {
     try {
-      const postList = await repository.getPostList()
-      res.status(200).send(postList.rows)
+      const postList = await repository.getPostList();
+      res.status(200).send(postList.rows);
     } catch (message) {
-      res.status(500).json(message)
+      res.status(500).json(message);
     }
   }
 
   async publishPost(req, res) {
-    const { description, url } = req.body
-    const userId = res.locals.session
+    const { description, url } = req.body;
+    const { userId } = res.locals.session;
 
     try {
-      if(!url) {
-        return sendStatus(404)
+      if (!url) {
+        return sendStatus(404);
       }
-      const metadata = await urlMetadata(url)
-      console.log(metadata)
+      const metadata = await urlMetadata(url);
+      console.log(metadata);
 
-      await repository.insertPost(description, url, metadata.title, metadata.description, metadata.image, userId)
-      
-      res.sendStatus(201)
+      await repository.insertPost(
+        description,
+        url,
+        metadata.title,
+        metadata.description,
+        metadata.image,
+        userId
+      );
+
+      res.sendStatus(201);
     } catch (message) {
-      res.status(500).json(message)
+      res.status(500).json(message);
     }
-  }    
-}
+  }
 
+  async likePost(req, res) {
+    const { postId } = req.params;
+    const { userId } = res.locals.session;
+    try {
+      const result = await repository.likePost(postId, userId);
+      if (!result) return res.sendStatus(404);
+      if (result.command === "INSERT") return res.sendStatus(201);
+      if (result.command === "DELETE") return res.sendStatus(200);
+    } catch (message) {
+      res.status(500).json(message);
+    }
+  }
+}
 
 export default new UsersController();
