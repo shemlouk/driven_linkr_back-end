@@ -89,6 +89,10 @@ class UsersRepository {
     );
     return res;
   }
+  async deletePostById(id) {
+    const res = await db.query(`DELETE FROM posts * WHERE id = $1`, [id]);
+    return res;
+  }
 }
 
 export default new UsersRepository();
