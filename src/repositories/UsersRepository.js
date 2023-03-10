@@ -33,7 +33,8 @@ class UsersRepository {
           FROM posts_likes JOIN users ON posts_likes.user_id = users.id
           GROUP BY post_id
         ) 
-        AS likes ON posts.id = likes.post_id;
+        AS likes ON posts.id = likes.post_id
+        ORDER BY posts.created_at DESC;
       `
     );
     return res;

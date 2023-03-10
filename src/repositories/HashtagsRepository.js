@@ -34,7 +34,8 @@ class HashtagsRepository {
                     GROUP BY post_id
                 )
                 AS likes ON posts.id = likes.post_id
-                WHERE ph.hashtag_id = $1;
+                WHERE ph.hashtag_id = $1
+                ORDER BY posts.created_at DESC;
             `,
             [hashtagId]);
         return res;
