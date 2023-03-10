@@ -89,7 +89,7 @@ class UsersController {
 
   async deletePost(req, res) {
     const { userId } = res.locals.session;
-    const { id } = req.params;
+    const id = Number(req.params.id);
     try {
       const { rows, rowCount } = await repository.getPostById(id);
 
