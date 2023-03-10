@@ -68,7 +68,7 @@ class UsersController {
   }
 
   async listUserPosts(req, res) {
-    const { id } = req.params
+    const { id } = req.params;
     try {
       const postList = await repository.getPostById(id);
       res.status(200).send(postList.rows);
@@ -82,6 +82,22 @@ class UsersController {
     try {
       const { rows } = await repository.getByName(name);
       res.send(rows);
+    } catch ({ message }) {
+      res.status(500).json(message);
+    }
+  }
+
+  async deletePost(req, res) {
+    const { userId } = res.locals.session;
+    const { id } = req.params;
+    try {
+      const { rows, rowCount } = await repository.getPostById(id);
+
+      if (!rowCount) return res.sendStatus(404);
+      if (rows[0].user_id !== userId) return res.sendStatus(401);
+
+      await repository.deletePostById(id);
+      res.sendStatus(204);
     } catch ({ message }) {
       res.status(500).json(message);
     }
