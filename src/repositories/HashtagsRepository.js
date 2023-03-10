@@ -23,7 +23,19 @@ class HashtagsRepository {
     }
     async getPostsWithHashtagId(hashtagId) {
         const res = db.query(
-            `SELECT u.name, u.profile_picture, p.* FROM posts p JOIN posts_hashtags ph ON p.id = ph.post_id JOIN hashtags h ON h.id = ph.hashtag_id JOIN users u ON p.user_id = u.id WHERE ph.hashtag_id = $1 ORDER BY created_at DESC;`,
+            `
+                SELECT posts.*, users.name, users.profile_picture, likes.likes_count, likes.likes_names
+                FROM posts 
+                JOIN users ON posts.user_id = users.id
+                JOIN posts_hashtags AS ph ON ph.post_id = posts.id 
+                LEFT JOIN (
+                    SELECT post_id, COUNT(*) AS likes_count, string_agg(users.name, ', ') AS likes_names
+                    FROM posts_likes JOIN users ON posts_likes.user_id = users.id
+                    GROUP BY post_id
+                )
+                AS likes ON posts.id = likes.post_id
+                WHERE ph.hashtag_id = $1;
+            `,
             [hashtagId]);
         return res;
     }
