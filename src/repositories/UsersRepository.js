@@ -77,6 +77,12 @@ class UsersRepository {
     );
     return res;
   }
+  async getPostByPostId(id) {
+    const res = await db.query(
+      `SELECT posts.* FROM posts WHERE id = $1;`,
+      [id]);
+    return res;
+  }
   async getByName(string) {
     const searchString = string + "%";
     const res = await db.query(
