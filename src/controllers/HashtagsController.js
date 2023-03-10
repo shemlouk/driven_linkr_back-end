@@ -7,7 +7,7 @@ class HashtagsController {
 
             const data = (await HashtagsRepository.getHashtagByName(name)).rows[0];
             
-            if (data.length === 0) {
+            if (data === undefined) {
                 const hashtagId = (await HashtagsRepository.create(name)).rows[0];
                 return res.status(201).send(hashtagId);
             }
