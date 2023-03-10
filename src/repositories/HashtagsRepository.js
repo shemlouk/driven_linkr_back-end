@@ -7,8 +7,8 @@ class HashtagsRepository {
             [hashtagName]);
         return res;
     }
-    async updateQuantityByOne(quantity, id) {
-        const res = db.query(`UPDATE hashtags SET quantity = $1 WHERE id = $2 RETURNING id;`, [(quantity + 1), id]);
+    async updateQuantityByOne(quantity, id, addValue = 1) {
+        const res = db.query(`UPDATE hashtags SET quantity = $1 WHERE id = $2 RETURNING id;`, [(quantity + addValue), id]);
         return res;
     }
     async getHashtagByName(hashtagName) {
@@ -31,6 +31,12 @@ class HashtagsRepository {
         const res = db.query(
             `INSERT INTO posts_hashtags (post_id, hashtag_id) VALUES ($1, $2);`,
             [post_id, hashtag_id]);
+        return res;
+    }
+    async deletePostHashtag(post_id) {
+        const res = db.query(
+            `DELETE FROM posts_hashtags WHERE post_id = $1`,
+            [post_id]);
         return res;
     }
 }
