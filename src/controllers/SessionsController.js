@@ -23,7 +23,7 @@ class SessionsController {
       const sessionId = (await SessionsRepository.create(id)).rows[0];
       const token = jwt.sign(sessionId, KEY, EXPIRATION);
 
-      res.send({ token, name, profilePicture });
+      res.send({ token, name, profilePicture, id });
     } catch ({ message }) {
       console.error(message);
       res.status(500).json(message);
