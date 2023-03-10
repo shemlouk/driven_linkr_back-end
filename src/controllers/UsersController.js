@@ -39,7 +39,7 @@ class UsersController {
       const metadata = await urlMetadata(url);
       console.log(metadata);
 
-      await repository.insertPost(
+      const post = await repository.insertPost(
         description,
         url,
         metadata.title,
@@ -48,7 +48,7 @@ class UsersController {
         userId
       );
 
-      res.sendStatus(201);
+      res.status(201).send(post.rows[0]);
     } catch (message) {
       res.status(500).json(message);
     }
