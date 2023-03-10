@@ -25,9 +25,16 @@ class UsersRepository {
   async getPostList() {
     const res = await db.query(
       `
-        SELECT posts.*, users.name AS name, users.profile_picture AS "profilePicture" FROM posts
-        JOIN users ON users.id = posts.user_id 
-        ORDER BY created_at DESC LIMIT 20;
+        SELECT posts.*, users.name, users.profile_picture, likes.likes_count, likes.likes_names
+        FROM posts 
+        JOIN users ON posts.user_id = users.id
+        LEFT JOIN (
+          SELECT post_id, COUNT(*) AS likes_count, string_agg(users.name, ', ') AS likes_names
+          FROM posts_likes JOIN users ON posts_likes.user_id = users.id
+          GROUP BY post_id
+        ) 
+        AS likes ON posts.id = likes.post_id
+        ORDER BY posts.created_at DESC;
       `
     );
     return res;
@@ -68,10 +75,17 @@ class UsersRepository {
   async getPostById(id) {
     const res = await db.query(
       `
-        SELECT posts.*, users.name AS name, users.profile_picture AS "profilePicture" FROM posts
-        JOIN users ON users.id = posts.user_id 
-        WHERE posts.user_id = $1
-        ORDER BY created_at DESC LIMIT 20;
+        SELECT posts.*, users.name, users.profile_picture, likes.likes_count, likes.likes_names
+        FROM posts 
+        JOIN users ON posts.user_id = users.id
+        LEFT JOIN (
+          SELECT post_id, COUNT(*) AS likes_count, string_agg(users.name, ', ') AS likes_names
+          FROM posts_likes JOIN users ON posts_likes.user_id = users.id
+          GROUP BY post_id
+        ) 
+        AS likes ON posts.id = likes.post_id
+        WHERE users.id = $1
+        ORDER BY posts.created_at DESC;
       `,
       [id]
     );
