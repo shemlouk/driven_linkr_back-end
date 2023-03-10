@@ -27,6 +27,12 @@ class HashtagsRepository {
             [hashtagId]);
         return res;
     }
+    async createPostHashtag({post_id, hashtag_id}) {
+        const res = db.query(
+            `INSERT INTO posts_hashtags (post_id, hashtag_id) VALUES ($1, $2);`,
+            [post_id, hashtag_id]);
+        return res;
+    }
 }
 
 export default new HashtagsRepository();

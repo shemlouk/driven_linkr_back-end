@@ -9,5 +9,6 @@ router.get("/trending", authentication, HashtagsController.getTrending);
 router.get("/hashtag/:id", authentication, HashtagsController.getPostsWithHashtagId);
 router.get("/hashtag/search/:name", authentication, HashtagsController.getHashtagByName);
 router.post("/hashtag", authentication, validateBody, HashtagsController.setHashtagName);
+router.post("/posts/hashtag", authentication, HashtagsController.savePostHashtags);
 
 export default router;

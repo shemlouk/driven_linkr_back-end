@@ -49,6 +49,21 @@ class HashtagsController {
             res.sendStatus(500);
         }
     }
+    async savePostHashtags(req, res) {
+        try {
+            const data = {
+                post_id: Number(req.body.post_id) || 0,
+                hashtag_id: Number(req.body.hashtag_id) || 0
+            };
+            if (data.post_id === 0 || data.hashtag_id === 0) res.sendStatus(400);
+
+            const response = (await HashtagsRepository.createPostHashtag(data)).rowCount;
+            response === 1 ? res.sendStatus(201) : res.send(409);
+        } catch (error) {
+            console.error(`getPostsWithHashtagId ${error}`);
+            res.sendStatus(500);
+        }
+    }
 }
 
 export default new HashtagsController();
