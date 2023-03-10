@@ -1,6 +1,7 @@
 import repository from "../repositories/UsersRepository.js";
 import bcrypt from "bcrypt";
 import urlMetadata from "url-metadata";
+import HashtagsRepository from "../repositories/HashtagsRepository.js";
 
 const DUPLICATE_CODE = "23505";
 const SALT_ROUNDS = 10;
@@ -91,10 +92,12 @@ class UsersController {
     const { userId } = res.locals.session;
     const id = Number(req.params.id);
     try {
-      const { rows, rowCount } = await repository.getPostById(id);
-
+      const {rows, rowCount} = await repository.getPostByPostId(id);
+      
       if (!rowCount) return res.sendStatus(404);
       if (rows[0].user_id !== userId) return res.sendStatus(401);
+
+      await HashtagsRepository.deletePostHashtag(id);
 
       await repository.deletePostById(id);
       res.sendStatus(204);
