@@ -39,6 +39,12 @@ class Schemas {
       preview_img: Joi.string().uri().required(),
     });
   }
+  comment() {
+    return Joi.object({
+      message: Joi.string().min(1).required(),
+      post_id: Joi.number().positive().integer().required(),
+    });
+  }
 }
 
 export default new Schemas();
