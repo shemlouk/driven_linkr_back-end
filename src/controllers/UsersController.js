@@ -1,7 +1,8 @@
-import repository from "../repositories/UsersRepository.js";
-import bcrypt from "bcrypt";
-import urlMetadata from "url-metadata";
 import HashtagsRepository from "../repositories/HashtagsRepository.js";
+import NetworkRepository from "../repositories/NetworkRepository.js";
+import repository from "../repositories/UsersRepository.js";
+import urlMetadata from "url-metadata";
+import bcrypt from "bcrypt";
 
 const DUPLICATE_CODE = "23505";
 const SALT_ROUNDS = 10;
@@ -92,8 +93,8 @@ class UsersController {
     const { userId } = res.locals.session;
     const id = Number(req.params.id);
     try {
-      const {rows, rowCount} = await repository.getPostByPostId(id);
-      
+      const { rows, rowCount } = await repository.getPostByPostId(id);
+
       if (!rowCount) return res.sendStatus(404);
       if (rows[0].user_id !== userId) return res.sendStatus(401);
 
@@ -102,6 +103,37 @@ class UsersController {
       await repository.deletePostById(id);
       res.sendStatus(204);
     } catch ({ message }) {
+      res.status(500).json(message);
+    }
+  }
+
+  async network(req, res) {
+    const followingId = Number(req.params.id);
+    const { userId } = res.locals.session;
+    if (followingId === userId)
+      return res.status(400).json("Can't follow yourself");
+    try {
+      const { rowCount } = await NetworkRepository.getId(userId, followingId);
+      if (rowCount) {
+        await NetworkRepository.delete(userId, followingId);
+        res.sendStatus(200);
+      } else {
+        await NetworkRepository.create(userId, followingId);
+        res.sendStatus(201);
+      }
+    } catch ({ message }) {
+      console.error(message);
+      res.status(500).json(message);
+    }
+  }
+
+  async getNetwork(req, res) {
+    const { userId } = res.locals.session;
+    try {
+      const { rows } = await NetworkRepository.getNetworkFromId(userId);
+      res.send(rows);
+    } catch ({ message }) {
+      console.error(message);
       res.status(500).json(message);
     }
   }
