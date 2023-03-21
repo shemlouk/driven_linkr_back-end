@@ -10,6 +10,12 @@ class CommentsRepository {
             [message, userId, postId]);
         return res;
     }
+    async selectCommentsByPostId(postId) {
+        const res = await db.query(
+            `SELECT * FROM posts_comments WHERE post_id = $1`,
+            [postId]);
+        return res;
+    }
 }
 
 export default new CommentsRepository();

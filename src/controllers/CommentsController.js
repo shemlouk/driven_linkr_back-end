@@ -13,6 +13,19 @@ class CommentsController {
             res.sendStatus(500);
         }
     }
+    async getComments(req, res) {
+        try {
+            const postId = req.params.id;
+
+            const { rows, rowCount } = await CommentsRepository.selectCommentsByPostId(postId);
+            if (rowCount === 0)  return res.sendStatus(404);
+
+            res.send(rows);
+        } catch (error) {
+            console.error(error);
+            res.sendStatus(500);
+        }
+    }
 }
 
 export default new CommentsController();
