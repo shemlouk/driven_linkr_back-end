@@ -25,15 +25,19 @@ class UsersRepository {
   async getPostList() {
     const res = await db.query(
       `
-        SELECT posts.*, users.name, users.profile_picture, likes.likes_count, likes.likes_names
+        SELECT posts.*, users.name, users.profile_picture, likes.likes_count, likes.likes_names, comments.num_comments
         FROM posts 
         JOIN users ON posts.user_id = users.id
         LEFT JOIN (
           SELECT post_id, COUNT(*) AS likes_count, string_agg(users.name, ', ') AS likes_names
           FROM posts_likes JOIN users ON posts_likes.user_id = users.id
           GROUP BY post_id
-        ) 
-        AS likes ON posts.id = likes.post_id
+        ) AS likes ON posts.id = likes.post_id
+        LEFT JOIN (
+					SELECT post_id, COUNT(*) AS num_comments
+					FROM posts_comments
+					GROUP BY post_id
+				) AS comments ON posts.id = comments.post_id
         ORDER BY posts.created_at DESC;
       `
     );
@@ -75,15 +79,19 @@ class UsersRepository {
   async getPostById(id) {
     const res = await db.query(
       `
-        SELECT posts.*, users.name, users.profile_picture, likes.likes_count, likes.likes_names
+        SELECT posts.*, users.name, users.profile_picture, likes.likes_count, likes.likes_names, comments.num_comments
         FROM posts 
         JOIN users ON posts.user_id = users.id
         LEFT JOIN (
           SELECT post_id, COUNT(*) AS likes_count, string_agg(users.name, ', ') AS likes_names
           FROM posts_likes JOIN users ON posts_likes.user_id = users.id
           GROUP BY post_id
-        ) 
-        AS likes ON posts.id = likes.post_id
+        ) AS likes ON posts.id = likes.post_id
+        LEFT JOIN (
+					SELECT post_id, COUNT(*) AS num_comments
+					FROM posts_comments
+					GROUP BY post_id
+				) AS comments ON posts.id = comments.post_id
         WHERE users.id = $1
         ORDER BY posts.created_at DESC;
       `,
