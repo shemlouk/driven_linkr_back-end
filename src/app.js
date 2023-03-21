@@ -6,6 +6,7 @@ import SignIn from "./routes/SignIn.js";
 import Hashtag from "./routes/Hashtag.js";
 import Timeline from "./routes/Timeline.js";
 import Users from "./routes/Users.js"
+import Comments from "./routes/Comments.js";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(SignUp);
 app.use(SignIn);
 app.use(Hashtag);
 app.use(Timeline);
+app.use(Comments);
 app.use(Users)
 
 // -----------------------------
