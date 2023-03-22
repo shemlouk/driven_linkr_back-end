@@ -38,6 +38,7 @@ class UsersRepository {
 					FROM posts_comments
 					GROUP BY post_id
 				) AS comments ON posts.id = comments.post_id
+        WHERE posts.deleted_at IS NULL
         ORDER BY posts.created_at DESC;
       `
     );
@@ -92,7 +93,7 @@ class UsersRepository {
 					FROM posts_comments
 					GROUP BY post_id
 				) AS comments ON posts.id = comments.post_id
-        WHERE users.id = $1
+        WHERE users.id = $1 AND posts.deleted_at IS NULL
         ORDER BY posts.created_at DESC;
       `,
       [id]
@@ -117,9 +118,13 @@ class UsersRepository {
     );
     return res;
   }
-  async deletePostById(id) {
-    const res = await db.query(`DELETE FROM posts * WHERE id = $1`, [id]);
+  async updateToDelete(id) {
+    const res = await db.query(`UPDATE posts SET deleted_at = NOW() WHERE id = $1`, [id]);
     return res;
+  }
+  async updatePostById(description, id) {
+    const res = await db.query(`UPDATE posts SET description = $1, updated_at = NOW() WHERE id = $2;`, [description, id])
+    return res
   }
 }
 
