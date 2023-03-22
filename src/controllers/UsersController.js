@@ -116,10 +116,12 @@ class UsersController {
       const { rowCount } = await NetworkRepository.getId(userId, followingId);
       if (rowCount) {
         await NetworkRepository.delete(userId, followingId);
-        res.sendStatus(200);
+        const { rows } = await NetworkRepository.getNetworkFromId(userId);
+        res.send(rows[0]);
       } else {
         await NetworkRepository.create(userId, followingId);
-        res.sendStatus(201);
+        const { rows } = await NetworkRepository.getNetworkFromId(userId);
+        res.status(201).send(rows[0]);
       }
     } catch ({ message }) {
       console.error(message);
