@@ -123,7 +123,7 @@ class UsersRepository {
     return res;
   }
   async updatePostById(description, id) {
-    const res = await db.query(`UPDATE posts SET description = $1 WHERE id = $2;`, [description, id])
+    const res = await db.query(`UPDATE posts SET description = $1, updated_at = NOW() WHERE id = $2;`, [description, id])
     return res
   }
 }
