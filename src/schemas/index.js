@@ -39,6 +39,11 @@ class Schemas {
       preview_img: Joi.string().uri().required(),
     });
   }
+  updatePost() {
+    return Joi.object({
+      description: Joi.string().required()
+    })
+  }
   comment() {
     return Joi.object({
       message: Joi.string().min(1).required(),

@@ -100,8 +100,26 @@ class UsersController {
 
       await HashtagsRepository.deletePostHashtag(id);
 
-      await repository.deletePostById(id);
-      res.sendStatus(204);
+      await repository.updateToDelete(id);
+      res.sendStatus(200);
+    } catch ({ message }) {
+      res.status(500).json(message);
+    }
+  }
+
+  async editPost(req, res) {
+    const { userId } = res.locals.session
+    const { description } = req.body
+    const { id } = req.params
+
+    try {
+      const { rows, rowCount } = await repository.getPostByPostId(id);
+
+      if (!rowCount) return res.sendStatus(404);
+      if (rows[0].user_id !== userId) return res.sendStatus(401);
+
+      await repository.updatePostById(description, id);
+      res.sendStatus(200);
     } catch ({ message }) {
       res.status(500).json(message);
     }
