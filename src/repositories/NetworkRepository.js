@@ -24,7 +24,7 @@ class NetworkRepository {
   }
   async getNetworkFromId(userId) {
     const res = await db.query(
-      `SELECT following_id AS "followingId" FROM network WHERE user_id = $1`,
+      `SELECT following_id AS "id" FROM network WHERE user_id = $1`,
       [userId]
     );
     return res;
