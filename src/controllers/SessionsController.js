@@ -1,4 +1,5 @@
 import SessionsRepository from "../repositories/SessionsRepository.js";
+import NetworkRepository from "../repositories/NetworkRepository.js";
 import UsersRepository from "../repositories/UsersRepository.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
@@ -23,7 +24,9 @@ class SessionsController {
       const sessionId = (await SessionsRepository.create(id)).rows[0];
       const token = jwt.sign(sessionId, KEY, EXPIRATION);
 
-      res.send({ token, name, profilePicture, id });
+      const network = (await NetworkRepository.getNetworkFromId(id)).rows[0];
+
+      res.send({ token, name, profilePicture, id, network });
     } catch ({ message }) {
       console.error(message);
       res.status(500).json(message);
