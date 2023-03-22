@@ -99,8 +99,8 @@ class UsersController {
 
       await HashtagsRepository.deletePostHashtag(id);
 
-      await repository.deletePostById(id);
-      res.sendStatus(204);
+      await repository.updateToDelete(id);
+      res.sendStatus(200);
     } catch ({ message }) {
       res.status(500).json(message);
     }
@@ -109,7 +109,7 @@ class UsersController {
   async editPost(req, res) {
     const { userId } = res.locals.session
     const { description } = req.body
-    const { id } = Number(req.params.id)
+    const { id } = req.params
 
     try {
       const { rows, rowCount } = await repository.getPostByPostId(id);
