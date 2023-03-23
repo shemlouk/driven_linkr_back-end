@@ -12,7 +12,7 @@ class CommentsRepository {
     }
     async selectCommentsByPostId(postId) {
         const res = await db.query(
-            `SELECT * FROM posts_comments WHERE post_id = $1`,
+            `SELECT pc.*, u.name, u.profile_picture FROM posts_comments AS pc JOIN users AS u ON pc.user_id = u.id WHERE pc.post_id = $1`,
             [postId]);
         return res;
     }
