@@ -72,9 +72,12 @@ class UsersController {
   async listUserPosts(req, res) {
     const { id } = req.params;
     try {
-      const postList = await repository.getPostById(id);
-      res.status(200).send(postList.rows);
-    } catch (message) {
+      const userData = (await repository.getById(id)).rows[0];
+      const { rows } = await repository.getPostById(id);
+      userData.posts = rows;
+      res.status(200).send(userData);
+    } catch ({ message }) {
+      console.error(message);
       res.status(500).json(message);
     }
   }
@@ -108,9 +111,9 @@ class UsersController {
   }
 
   async editPost(req, res) {
-    const { userId } = res.locals.session
-    const { description } = req.body
-    const { id } = req.params
+    const { userId } = res.locals.session;
+    const { description } = req.body;
+    const { id } = req.params;
 
     try {
       const { rows, rowCount } = await repository.getPostByPostId(id);
