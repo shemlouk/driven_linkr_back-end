@@ -22,8 +22,9 @@ class UsersController {
   }
 
   async listPosts(req, res) {
+    const offset = parseInt(req.query.offset)
     try {
-      const postList = await repository.getPostList();
+      const postList = await repository.getPostList(offset);
       res.status(200).send(postList.rows);
     } catch (message) {
       res.status(500).json(message);
