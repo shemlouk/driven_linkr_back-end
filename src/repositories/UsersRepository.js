@@ -101,9 +101,9 @@ class UsersRepository {
     return res;
   }
   async getPostByPostId(id) {
-    const res = await db.query(
-      `SELECT posts.* FROM posts WHERE id = $1;`,
-      [id]);
+    const res = await db.query(`SELECT posts.* FROM posts WHERE id = $1;`, [
+      id,
+    ]);
     return res;
   }
   async getByName(string) {
@@ -119,12 +119,25 @@ class UsersRepository {
     return res;
   }
   async updateToDelete(id) {
-    const res = await db.query(`UPDATE posts SET deleted_at = NOW() WHERE id = $1`, [id]);
+    const res = await db.query(
+      `UPDATE posts SET deleted_at = NOW() WHERE id = $1`,
+      [id]
+    );
     return res;
   }
   async updatePostById(description, id) {
-    const res = await db.query(`UPDATE posts SET description = $1, updated_at = NOW() WHERE id = $2;`, [description, id])
-    return res
+    const res = await db.query(
+      `UPDATE posts SET description = $1, updated_at = NOW() WHERE id = $2;`,
+      [description, id]
+    );
+    return res;
+  }
+  async getById(id) {
+    const res = await db.query(
+      `SELECT name, profile_picture FROM users WHERE id = $1`,
+      [id]
+    );
+    return res;
   }
 }
 
