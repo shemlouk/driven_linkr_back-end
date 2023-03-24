@@ -30,7 +30,14 @@ class UsersController {
       res.status(500).json(message);
     }
   }
-
+  async listAllPosts(req, res) {
+    try {
+      const allPosts = await repository.getAllPosts();
+      res.status(200).send(allPosts.rows);
+    } catch (message) {
+      res.status(500).json(message);
+    }
+  }
   async publishPost(req, res) {
     const { description, url } = req.body;
     const { userId } = res.locals.session;
