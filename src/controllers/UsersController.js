@@ -22,11 +22,15 @@ class UsersController {
   }
 
   async listPosts(req, res) {
-    const offset = parseInt(req.query.offset)
+    const offset = parseInt(req.query.offset);
+    const { userId } = res.locals.session;
     try {
-      const postList = await repository.getPostList(offset);
-      res.status(200).send(postList.rows);
-    } catch (message) {
+      const userNetwork =
+        (await NetworkRepository.getNetworkFromId(userId)).rows[0]?.ids || [];
+      const postList = await repository.getPostList(offset, userNetwork);
+      res.send(postList.rows);
+    } catch ({ message }) {
+      console.error(message);
       res.status(500).json(message);
     }
   }
