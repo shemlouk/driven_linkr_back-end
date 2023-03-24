@@ -22,40 +22,58 @@ class UsersRepository {
     );
     return res;
   }
-  async getPostList(offset) {
+  async getPostList(offset, network) {
     //obtem a contagem total de posts não deletados
     const postCount = await db.query(
       `SELECT COUNT(*) AS total FROM posts WHERE deleted_at IS NULL;`
-    )
+    );
     // Se offset >= a contagem total, retorna um array vazio
-    const total = postCount.rows[0].total
+    const total = postCount.rows[0].total;
     if (offset >= total) {
-      return []
+      return [];
     }
     //verifica qual é o menor valor 10 ou o restante de posts da contagem
     //se 10 for menor, limita a 10 a quantidade de posts
     //Se limit for menor, retorna somente a quantidade de posts restantes
     //impedindo que retorna posts repetidos
-    const limit = Math.min(10, total - offset)
+    const limit = Math.min(10, total - offset);
     const res = await db.query(
       `
-        SELECT posts.*, users.name, users.profile_picture, likes.likes_count, likes.likes_names, comments.num_comments
+        SELECT  posts.*,
+                users.name,
+                users.profile_picture,
+                likes.likes_count,
+                likes.likes_names,
+                comments.num_comments,
+                posts_reposts.num_reposts
         FROM posts 
         JOIN users ON posts.user_id = users.id
-        LEFT JOIN (
-          SELECT post_id, COUNT(*) AS likes_count, string_agg(users.name, ', ') AS likes_names
-          FROM posts_likes JOIN users ON posts_likes.user_id = users.id
-          GROUP BY post_id
-        ) AS likes ON posts.id = likes.post_id
-        LEFT JOIN (
-					SELECT post_id, COUNT(*) AS num_comments
-					FROM posts_comments
-					GROUP BY post_id
-				) AS comments ON posts.id = comments.post_id
-        WHERE posts.deleted_at IS NULL
+          LEFT JOIN (
+            SELECT  post_id,
+                    COUNT(*) AS likes_count,
+                    string_agg(users.name, ', ') AS likes_names
+            FROM posts_likes
+            JOIN users ON posts_likes.user_id = users.id
+            GROUP BY post_id
+          ) AS likes ON posts.id = likes.post_id
+          LEFT JOIN (
+            SELECT  post_id,
+                    COUNT(*) AS num_comments
+            FROM posts_comments
+            GROUP BY post_id
+          ) AS comments ON posts.id = comments.post_id
+          LEFT JOIN (
+            SELECT  post_id,
+                    COUNT(*) AS num_reposts
+            FROM posts_reposts
+            GROUP BY post_id
+          ) AS posts_reposts ON posts.id = posts_reposts.post_id
+        WHERE	posts.deleted_at IS NULL
+            AND posts.user_id = ANY ($3::int[])
         ORDER BY posts.created_at DESC
-        LIMIT $1 OFFSET $2;
-      `, [limit, offset]
+        LIMIT $1 OFFSET $2
+      `,
+      [limit, offset, network]
     );
     return res;
   }
@@ -77,7 +95,7 @@ class UsersRepository {
 				) AS comments ON posts.id = comments.post_id
         WHERE posts.deleted_at IS NULL
         ORDER BY posts.created_at DESC;
-      `,
+      `
     );
     return res;
   }
