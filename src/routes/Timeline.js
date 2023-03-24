@@ -6,6 +6,7 @@ import authentication from "../middlewares/authentication.js";
 const router = Router()
 
 router.get("/timeline", UsersController.listPosts)
+router.get("/timeline/posts", UsersController.listAllPosts)
 router.post("/timeline", authentication, validateBody, UsersController.publishPost)
 router.post("/timeline/:postId/like", authentication, UsersController.likePost)
 
