@@ -22,7 +22,21 @@ class UsersRepository {
     );
     return res;
   }
-  async getPostList() {
+  async getPostList(offset) {
+    //obtem a contagem total de posts não deletados
+    const postCount = await db.query(
+      `SELECT COUNT(*) AS total FROM posts WHERE deleted_at IS NULL;`
+    )
+    // Se offset >= a contagem total, retorna um array vazio
+    const total = postCount.rows[0].total
+    if (offset >= total) {
+      return []
+    }
+    //verifica qual é o menor valor 10 ou o restante de posts da contagem
+    //se 10 for menor, limita a 10 a quantidade de posts
+    //Se limit for menor, retorna somente a quantidade de posts restantes
+    //impedindo que retorna posts repetidos
+    const limit = Math.min(10, total - offset)
     const res = await db.query(
       `
         SELECT posts.*, users.name, users.profile_picture, likes.likes_count, likes.likes_names, comments.num_comments
@@ -39,8 +53,9 @@ class UsersRepository {
 					GROUP BY post_id
 				) AS comments ON posts.id = comments.post_id
         WHERE posts.deleted_at IS NULL
-        ORDER BY posts.created_at DESC;
-      `
+        ORDER BY posts.created_at DESC
+        LIMIT $1 OFFSET $2;
+      `, [limit, offset]
     );
     return res;
   }
