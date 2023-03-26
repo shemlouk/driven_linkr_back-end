@@ -25,6 +25,7 @@ CREATE TABLE
         preview_img TEXT NOT NULL,
         user_id integer NOT NULL REFERENCES users (id),
         created_at TIMESTAMP NOT NULL DEFAULT NOW (),
+        updated_at TIMESTAMP DEFAULT NULL,
         deleted_at TIMESTAMP DEFAULT NULL
     );
 
