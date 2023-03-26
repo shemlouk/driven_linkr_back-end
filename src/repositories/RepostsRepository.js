@@ -27,7 +27,7 @@ class RepostsRepository {
     // Se offset >= a contagem total, retorna um array vazio
     const total = rowCount;
     if (offset >= total) {
-      return [];
+      return {rows: []};
     }
     //verifica qual é o menor valor 10 ou o restante de posts da contagem
     //se 10 for menor, limita a 10 a quantidade de posts
