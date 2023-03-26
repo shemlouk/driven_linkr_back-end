@@ -24,7 +24,8 @@ CREATE TABLE
         preview_desc TEXT NOT NULL,
         preview_img TEXT NOT NULL,
         user_id integer NOT NULL REFERENCES users (id),
-        created_at TIMESTAMP NOT NULL DEFAULT NOW ()
+        created_at TIMESTAMP NOT NULL DEFAULT NOW (),
+        deleted_at TIMESTAMP DEFAULT NULL
     );
 
 CREATE TABLE
@@ -46,4 +47,30 @@ CREATE TABLE
     sessions (
         id serial PRIMARY KEY,
         user_id integer NOT NULL REFERENCES users (id)
+    );
+
+CREATE TABLE 
+    posts_reposts (
+        PRIMARY KEY (id),
+        id SERIAL,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        post_id INTEGER NOT NULL REFERENCES posts(id),
+        created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        deleted_at TIMESTAMP DEFAULT NULL
+    );
+
+CREATE TABLE
+    network (
+        id serial PRIMARY KEY,
+        user_id integer NOT NULL REFERENCES users (id),
+        following_id integer NOT NULL REFERENCES users (id),
+        created_at TIMESTAMP DEFAULT NOW()
+    );
+
+CREATE TABLE
+    posts_comments (
+        id serial PRIMARY KEY,
+        message TEXT NOT NULL,
+        user_id integer NOT NULL REFERENCES users (id),
+        post_id integer NOT NULL REFERENCES posts (id)
     );
