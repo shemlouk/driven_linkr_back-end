@@ -3,6 +3,7 @@ import NetworkRepository from "../repositories/NetworkRepository.js";
 import repository from "../repositories/UsersRepository.js";
 import urlMetadata from "url-metadata";
 import bcrypt from "bcrypt";
+import RepostsRepository from "../repositories/RepostsRepository.js";
 
 const DUPLICATE_CODE = "23505";
 const SALT_ROUNDS = 10;
@@ -27,8 +28,21 @@ class UsersController {
     try {
       const userNetwork =
         (await NetworkRepository.getNetworkFromId(userId)).rows[0]?.ids || [];
+      userNetwork.push(userId);
       const postList = await repository.getPostList(offset, userNetwork);
-      res.send(postList.rows);
+      postList.rows.forEach((p) => (p.rb_created_at = p.created_at));
+      const repostList = await RepostsRepository.getReposts(
+        offset,
+        userNetwork
+      );
+
+      const data = [...postList.rows, ...repostList.rows];
+
+      data.sort(
+        (a, b) => new Date(b.rb_created_at) - new Date(a.rb_created_at)
+      );
+
+      res.send(data);
     } catch ({ message }) {
       console.error(message);
       res.status(500).json(message);
