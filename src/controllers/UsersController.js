@@ -32,7 +32,7 @@ class UsersController {
       const postList = await repository.getPostList(offset, userNetwork);
       postList.rows.forEach((p) => (p.rb_created_at = p.created_at));
       const repostList = await RepostsRepository.getReposts(
-        offset,
+        postList.rows[0]?.created_at,
         userNetwork
       );
 
